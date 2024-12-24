@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilder Hochladen im Polaroid-Stil</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f7f7f7;
+        }
+
+        input[type="file"] {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: white;  /* Weißer Hintergrund */
+            color: black;  /* Schwarze Schriftfarbe */
+            border: 2px solid #ccc;  /* Grauer Rand */
+            cursor: pointer;
+            font-size: 16px;  /* Schriftgröße */
+            border-radius: 5px;  /* Abgerundete Ecken */
+        }
+
+        .polaroid-container {
+            position: relative;
+            margin-top: 20px;
+            padding-bottom: 20px;
+            min-height: 400px; /* Sicherstellen, dass der Container genügend Platz bietet */
+        }
+
+        .polaroid {
+            width: 220px;
+            height: 270px;
+            background-color: white;
+            border: 8px solid #e1e1e1;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            overflow: hidden;
+            padding-top: 15px;
+            position: absolute;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .polaroid img {
+            width: 190px;
+            height: 190px;
+            object-fit: cover;
+            border-bottom: 8px solid #e1e1e1;
+        }
+
+        .polaroid .caption {
+            font-family: 'Permanent Marker', cursive; /* Handschriftliche Schriftart */
+            font-size: 16px;
+            color: black; /* Schwarze Schrift */
+            margin-top: 5px;
+            min-height: 20px; /* Mindesthöhe für Text */
+            cursor: text;
+            outline: none; /* Entfernt die Standard-Hervorhebung bei Doppelklick */
+            white-space: pre-wrap; /* Zeilenumbrüche ermöglichen */
+            width: 100%;
+            text-align: center;
+        }
+
+        .polaroid .caption:empty::before {
+            content: "Doppelklick zum Hinzufügen"; /* Platzhaltertext */
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bilderbuch</h1>
+
+    <!-- Button zum Hochladen mehrerer Bilder -->
+    <input type="file" id="fileInput" accept="image/*" multiple onchange="showImages(event)">
+    
+    <!-- Container für Polaroid-Bilder -->
+    <div id="imageContainer" class="polaroid-container"></div>
+
+    <script>
+        function showImages(event) {
+            const files = event.target.files;
+            const imageContainer = document.getElementById("imageContainer");
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const polaroid = document.createElement("div");
+                    polaroid.classList.add("polaroid");
+
+                    // Bild hinzufügen
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    polaroid.appendChild(img);
+
+                    // Beschriftungsbereich hinzufügen
+                    const caption = document.createElement("div");
+                    caption.classList.add("caption");
+                    caption.contentEditable = true; // Bereich wird editierbar
+                    caption.addEventListener("dblclick", function() {
+                        caption.focus(); // Fokus auf das Textfeld beim Doppelklick
+                    });
+
+                    polaroid.appendChild(caption);
+
+                    // Polaroid positionieren und verschiebbar machen
+                    polaroid.style.top = `${Math.random() * 300}px`;
+                    polaroid.style.left = `${Math.random() * 300}px`;
+                    makeDraggable(polaroid);
+
+                    imageContainer.appendChild(polaroid);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function makeDraggable(element) {
+            let isDragging = false;
+            let offsetX, offsetY;
+
+            element.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                offsetX = e.clientX - element.offsetLeft;
+                offsetY = e.clientY - element.offsetTop;
+                element.style.cursor = 'grabbing';
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (isDragging) {
+                    element.style.left = `${e.clientX - offsetX}px`;
+                    element.style.top = `${e.clientY - offsetY}px`;
+                }
+            });
+
+            document.addEventListener('mouseup', function() {
+                if (isDragging) {
+                    isDragging = false;
+                    element.style.cursor = 'grab';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
