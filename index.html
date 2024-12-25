@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visionboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <title>Bilder Hochladen im Polaroid-Stil</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 
@@ -13,40 +12,24 @@
             text-align: center;
             padding: 20px;
             background-color: #f7f7f7;
-            position: relative;
         }
 
         input[type="file"] {
             margin: 20px 0;
             padding: 10px;
-            background-color: white;  
-            color: black;  
-            border: 2px solid #ccc;  
+            background-color: white;  /* Weißer Hintergrund */
+            color: black;  /* Schwarze Schriftfarbe */
+            border: 2px solid #ccc;  /* Grauer Rand */
             cursor: pointer;
-            font-size: 16px;  
-            border-radius: 5px;  
-        }
-
-        button {
-            margin: 20px 10px;
-            padding: 10px 20px;
-            background-color: #4CAF50; 
-            color: white; 
-            border: none; 
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #45a049;
+            font-size: 16px;  /* Schriftgröße */
+            border-radius: 5px;  /* Abgerundete Ecken */
         }
 
         .polaroid-container {
             position: relative;
             margin-top: 20px;
             padding-bottom: 20px;
-            min-height: 400px;
+            min-height: 400px; /* Sicherstellen, dass der Container genügend Platz bietet */
         }
 
         .polaroid {
@@ -71,44 +54,29 @@
         }
 
         .polaroid .caption {
-            font-family: 'Permanent Marker', cursive;
+            font-family: 'Permanent Marker', cursive; /* Handschriftliche Schriftart */
             font-size: 16px;
-            color: black;
+            color: black; /* Schwarze Schrift */
             margin-top: 5px;
-            min-height: 20px;
+            min-height: 20px; /* Mindesthöhe für Text */
             cursor: text;
-            outline: none;
-            white-space: pre-wrap;
+            outline: none; /* Entfernt die Standard-Hervorhebung bei Doppelklick */
+            white-space: pre-wrap; /* Zeilenumbrüche ermöglichen */
             width: 100%;
             text-align: center;
         }
 
         .polaroid .caption:empty::before {
-            content: "Doppelklick zum Hinzufügen";
+            content: "Doppelklick zum Hinzufügen"; /* Platzhaltertext */
             color: #bbb;
-        }
-
-        .text-box {
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            position: absolute;
-            padding: 5px;
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            cursor: move;
-            user-select: none;
-            outline: none;
         }
     </style>
 </head>
-<body ondblclick="addText(event)">
-    <h1>Visionboard</h1>
+<body>
+    <h1>Bilderbuch</h1>
 
     <!-- Button zum Hochladen mehrerer Bilder -->
     <input type="file" id="fileInput" accept="image/*" multiple onchange="showImages(event)">
-    <!-- Button zum Erstellen eines Screenshots -->
-    <button onclick="captureScreenshot()">Screenshot machen</button>
     
     <!-- Container für Polaroid-Bilder -->
     <div id="imageContainer" class="polaroid-container"></div>
@@ -134,16 +102,16 @@
                     // Beschriftungsbereich hinzufügen
                     const caption = document.createElement("div");
                     caption.classList.add("caption");
-                    caption.contentEditable = true;
+                    caption.contentEditable = true; // Bereich wird editierbar
                     caption.addEventListener("dblclick", function() {
-                        caption.focus();
+                        caption.focus(); // Fokus auf das Textfeld beim Doppelklick
                     });
 
                     polaroid.appendChild(caption);
 
                     // Polaroid positionieren und verschiebbar machen
-                    polaroid.style.top = `${Math.random() * 300}px`;
-                    polaroid.style.left = `${Math.random() * 300}px`;
+                    polaroid.style.top = ${Math.random() * 300}px;
+                    polaroid.style.left = ${Math.random() * 300}px;
                     makeDraggable(polaroid);
 
                     imageContainer.appendChild(polaroid);
@@ -166,8 +134,8 @@
 
             document.addEventListener('mousemove', function(e) {
                 if (isDragging) {
-                    element.style.left = `${e.clientX - offsetX}px`;
-                    element.style.top = `${e.clientY - offsetY}px`;
+                    element.style.left = ${e.clientX - offsetX}px;
+                    element.style.top = ${e.clientY - offsetY}px;
                 }
             });
 
@@ -176,29 +144,6 @@
                     isDragging = false;
                     element.style.cursor = 'grab';
                 }
-            });
-        }
-
-        function addText(event) {
-            const textBox = document.createElement("div");
-            textBox.classList.add("text-box");
-            textBox.contentEditable = true;
-            textBox.style.left = `${event.clientX}px`;
-            textBox.style.top = `${event.clientY}px`;
-            textBox.textContent = "Text hier eingeben";
-            document.body.appendChild(textBox);
-
-            makeDraggable(textBox);
-            textBox.addEventListener("dblclick", () => textBox.focus());
-        }
-
-        function captureScreenshot() {
-            const container = document.body; 
-            html2canvas(container).then(canvas => {
-                const link = document.createElement("a");
-                link.download = "screenshot.png";
-                link.href = canvas.toDataURL("image/png");
-                link.click();
             });
         }
     </script>
