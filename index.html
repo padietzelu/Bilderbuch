@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bilder Hochladen im Polaroid-Stil</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 
@@ -23,6 +24,21 @@
             cursor: pointer;
             font-size: 16px;  /* Schriftgröße */
             border-radius: 5px;  /* Abgerundete Ecken */
+        }
+
+        button {
+            margin: 20px 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50; /* Grüner Hintergrund */
+            color: white; /* Weiße Schrift */
+            border: none; /* Kein Rand */
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049; /* Dunkleres Grün beim Hover */
         }
 
         .polaroid-container {
@@ -77,6 +93,8 @@
 
     <!-- Button zum Hochladen mehrerer Bilder -->
     <input type="file" id="fileInput" accept="image/*" multiple onchange="showImages(event)">
+    <!-- Button zum Erstellen eines Screenshots -->
+    <button onclick="captureScreenshot()">Screenshot machen</button>
     
     <!-- Container für Polaroid-Bilder -->
     <div id="imageContainer" class="polaroid-container"></div>
@@ -144,6 +162,17 @@
                     isDragging = false;
                     element.style.cursor = 'grab';
                 }
+            });
+        }
+
+        function captureScreenshot() {
+            const container = document.body; // Gesamte Seite erfassen
+            html2canvas(container).then(canvas => {
+                // Screenshot als Bild speichern
+                const link = document.createElement("a");
+                link.download = "screenshot.png";
+                link.href = canvas.toDataURL("image/png");
+                link.click();
             });
         }
     </script>
